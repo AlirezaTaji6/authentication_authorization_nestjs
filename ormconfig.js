@@ -1,21 +1,17 @@
 module.exports = {
-   "type": "mysql",
-   "host": "localhost",
-   "port": 3306,
-   "username": "test",
-   "password": "test",
-   "database": "test",
+   "type": process.env.DB_TYPE,
+   "host": process.env.DB_HOST,
+   "port": process.env.DB_PORT,
+   "username": process.env.DB_USERNAME,
+   "password": process.env.DB_PASSWORD,
+   "database": process.env.DB_NAME,
    "synchronize": true,
    "logging": false,
-   "entities": [
-      "src/**/*.ts"
-   ],
+   "entities": ["dist/**/*.entity.js"],
    "migrations": [
-      "src/db/migration/**/*.ts"
-   ],
-   "subscribers": [
-      "src/subscriber/**/*.ts"
-   ],
+      "dist/shared/migrations/*.js"
+  ],
+  migrationsRun: false,
    "cli": {
       "migrationsDir": "src/db/migration"
    }

@@ -5,7 +5,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserInterface } from './interfaces/create-user.interface';
-import { PhoneInterface } from './interfaces/phone.interface';
 
 @Injectable()
 export class UsersService {

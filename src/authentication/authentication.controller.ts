@@ -30,16 +30,24 @@ export class AuthenticationController {
       const code = await this.authenticationService.cachePhone(phone);
       console.log(code);
       
-      const sentSuccessful = await this.authenticationService.sendVerification(
-          phone,
-          SmsApiEnum.VERIFICATION_TEMPLATE_ID,
-          code
-          );
+      //FIXME: sms panel needed
+      // const sentSuccessful = await this.authenticationService.sendVerification(
+      //     phone,
+      //     SmsApiEnum.VERIFICATION_TEMPLATE_ID,
+      //     code
+      //     );
 
-      if(!sentSuccessful) {
-          ResponseDto.error(AuthenticationErrorEnum.SMS_SERVICE_NOT_WORK, 501);
-      }
+      // if(!sentSuccessful) {
+      //     ResponseDto.error(AuthenticationErrorEnum.SMS_SERVICE_NOT_WORK, 501);
+      // }
+
       return ResponseDto.success({ phone });
 
+  }
+
+  @ApiOperation({ summary: 'Verify phone number using the code sent' })
+  @Post('verify-register')
+  async verifyCode() {
+    
   }
 }

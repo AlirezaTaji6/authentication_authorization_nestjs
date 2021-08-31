@@ -10,6 +10,6 @@ import { SmsReportEntity } from './entities/sms-report.entity';
   ],
   controllers: [SmsController],
   providers: [SmsService],
-  exports: [SmsService]
+  exports: [SmsService, TypeOrmModule]
 })
 export class SmsModule {}
