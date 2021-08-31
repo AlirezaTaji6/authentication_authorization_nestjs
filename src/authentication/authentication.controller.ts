@@ -3,10 +3,12 @@ import { Body } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResponseDto } from 'src/shared/dto/response.dto';
+import { SmsApiEnum } from 'src/sms/enums/sms-api.enum';
 import { UserErrorEnum } from 'src/users/enums/user-message.enum';
 import { UsersService } from 'src/users/users.service';
 import { AuthenticationService } from './authentication.service';
 import { LinearRegisterDto } from './dto/linear-register.dto';
+import { AuthenticationErrorEnum } from './enums/authentication-message.enum';
 
 @ApiTags('authentication')
 @Controller('authentication')
@@ -24,16 +26,20 @@ export class AuthenticationController {
       if(isDuplicated) {
         return ResponseDto.error(UserErrorEnum.PHONE_DUPLICATION, 409)
       }
-      await this.authenticationService.cachePhone(phone);
-      const sentSuccessful = await this.authService.sendVerification(
-          body.phone_number,
+
+      const code = await this.authenticationService.cachePhone(phone);
+      console.log(code);
+      
+      const sentSuccessful = await this.authenticationService.sendVerification(
+          phone,
           SmsApiEnum.VERIFICATION_TEMPLATE_ID,
-          SmsApiEnum.VERIFICATION_TEMPLATE_TYPE
+          code
           );
+
       if(!sentSuccessful) {
-          throw new HttpException(AuthErrorEnum.SMS_SERVICE_NOT_WORK, 501);
+          ResponseDto.error(AuthenticationErrorEnum.SMS_SERVICE_NOT_WORK, 501);
       }
-      return ResponseDto.success(body, AuthSuccessEnum.VERIFICATION_CODE_SENT);
+      return ResponseDto.success({ phone });
 
   }
 }
