@@ -1,6 +1,7 @@
 import { hash, compare } from 'bcrypt';
+import { RoleEntity } from 'src/authorization/entities/role.entity';
 import { ParentEntity } from 'src/db/entities/parent.entity';
-import { Entity, Column, PrimaryGeneratedColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, AfterLoad, BeforeInsert, BeforeUpdate, ManyToMany, JoinTable } from 'typeorm'
 
 @Entity('users')
 export class UserEntity extends ParentEntity {
@@ -18,6 +19,14 @@ export class UserEntity extends ParentEntity {
 
     @Column({ nullable: false })
     password: string;
+
+    @ManyToMany(
+        () => RoleEntity,
+        role => role.users,
+        { eager: true }
+    )
+    @JoinTable({ name: 'user_roles' })
+    roles: RoleEntity[]
 
     private tempPassword: string;
     @AfterLoad()
