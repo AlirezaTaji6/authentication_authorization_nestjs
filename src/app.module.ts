@@ -6,6 +6,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { RedisModule } from 'nestjs-redis';
 import { SmsModule } from './sms/sms.module';
 import { config } from 'dotenv';
+import { AuthorizationModule } from './authorization/authorization.module';
 config()
 @Module({
   imports: [
@@ -16,7 +17,7 @@ config()
       port: parseInt(process.env.REDIS_PORT)
     }),
     UsersModule, 
-    AuthenticationModule, SmsModule
+    AuthenticationModule, SmsModule, AuthorizationModule
   ],
   controllers: [],
   providers: [AppService],
