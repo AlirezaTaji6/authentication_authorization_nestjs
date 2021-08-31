@@ -24,6 +24,10 @@ export class UsersService {
     return this.usersRepository.findOne({ phone });  
   }
 
+  findById(id: number) {
+    return this.usersRepository.findOne({ id })
+  }
+
   findAll() {
     return `This action returns all users`;
   }
