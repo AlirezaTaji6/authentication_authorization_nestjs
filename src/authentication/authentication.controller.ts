@@ -8,6 +8,7 @@ import { UserErrorEnum } from 'src/users/enums/user-message.enum';
 import { UsersService } from 'src/users/users.service';
 import { AuthenticationService } from './authentication.service';
 import { LinearRegisterDto } from './dto/linear-register.dto';
+import { VerifyRegisterDto } from './dto/verify-register.dto';
 import { AuthenticationErrorEnum } from './enums/authentication-message.enum';
 
 @ApiTags('authentication')
@@ -47,7 +48,18 @@ export class AuthenticationController {
 
   @ApiOperation({ summary: 'Verify phone number using the code sent' })
   @Post('verify-register')
-  async verifyCode() {
-    
+  async verifyRegister(@Body() { phone, code }: VerifyRegisterDto) {
+
+      const verified = await this.authenticationService.verifyCode(phone, code);
+      if(!verified) return ResponseDto.error(
+          AuthenticationErrorEnum.VERIFICATION_INCORRECT_CODE,
+          403
+          )
+      
+      await this.authenticationService.deleteVerificationCode(phone)
+      
+      const token = await this.authenticationService.generateForceToken(phone);
+
+      return ResponseDto.success({ force_token: token });
   }
 }
