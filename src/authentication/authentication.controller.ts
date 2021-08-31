@@ -8,6 +8,7 @@ import { UserErrorEnum } from 'src/users/enums/user-message.enum';
 import { UsersService } from 'src/users/users.service';
 import { AuthenticationService } from './authentication.service';
 import { LinearRegisterDto } from './dto/linear-register.dto';
+import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { VerifyRegisterDto } from './dto/verify-register.dto';
 import { AuthenticationErrorEnum } from './enums/authentication-message.enum';
@@ -75,10 +76,27 @@ export class AuthenticationController {
         )
 
     await this.authenticationService.deleteForceToken(phone)
-    
+
     const userIns = await this.usersService.create({ phone, password })
 
-    return ResponseDto.success(userIns.toJSON());
+    const token = await this.authenticationService.generateAccessToken(userIns.id)
 
+    return ResponseDto.success({ ...userIns.toJSON(), access_token: token });
+
+  }
+
+  @ApiOperation({ summary: 'Login with password' })
+  @Post('login')
+  async login(@Body() { phone, password }: LoginDto) {
+
+    const userFound = await this.usersService.findByPhone(phone)
+    if(!userFound) return ResponseDto.error(UserErrorEnum.NOT_FOUND, 404)
+
+    const correct = await userFound.comparePassword(password)
+    if(!correct) return ResponseDto.error(AuthenticationErrorEnum.PASSWORD_IS_INCORRECT, 401)
+
+    const token = await this.authenticationService.generateAccessToken(userFound.id)
+
+    return ResponseDto.success({ ...userFound.toJSON(), access_token: token })
   }
 }

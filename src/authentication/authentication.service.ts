@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { RedisService } from 'nestjs-redis';
 import { SmsService } from 'src/sms/sms.service';
 import { v4 } from 'uuid'
+import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class AuthenticationService {
     constructor(
         private readonly smsService: SmsService,
-        private readonly redisService: RedisService
+        private readonly redisService: RedisService,
+        private jwtService: JwtService,
     ) {}
 
     async cachePhone(phone: string) {
@@ -95,6 +97,11 @@ export class AuthenticationService {
         )
 
         return client.del(`activation_token-${phone}`)
+    }
+
+    generateAccessToken(user_id: number) {
+        const payload = { id: user_id };
+        return this.jwtService.sign(payload)
     }
 }
 

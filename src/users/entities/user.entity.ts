@@ -1,4 +1,4 @@
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { ParentEntity } from 'src/db/entities/parent.entity';
 import { Entity, Column, PrimaryGeneratedColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm'
 
@@ -11,7 +11,7 @@ export class UserEntity extends ParentEntity {
     }
 
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
 
     @Column({ nullable: false, unique: true })
     phone: string;
@@ -31,6 +31,10 @@ export class UserEntity extends ParentEntity {
         if(this.password && this.tempPassword !== this.password) {
             this.password = await hash(this.password, 8);
         }
+    }
+
+    comparePassword(password: string) {
+        return compare(password, this.password)
     }
 
     toJSON() {
