@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator'
 
 import { ApiProperty } from '@nestjs/swagger'
 
-export class ResponseDTO {
+export class ResponseDto {
     constructor(
         //TODO: Best practice is input value be single e.g constructor(response)
         data: any,
@@ -40,15 +40,15 @@ export class ResponseDTO {
         message: string = 'Success',
         code: number = 200,
         meta: any = ''
-    ): ResponseDTO {
-        return new ResponseDTO(data, message, code, meta)
+    ): ResponseDto {
+        return new ResponseDto(data, message, code, meta)
     }
 
     static error(
         message: string = 'Error',
         code: number = 500,
         meta: any = ''
-    ): ResponseDTO {
-        return new ResponseDTO(undefined, message, code, meta)
+    ): ResponseDto {
+        return new ResponseDto(undefined, message, code, meta)
     }
 }

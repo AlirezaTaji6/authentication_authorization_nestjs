@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common'
 
 
-import { ResponseDTO } from '../dto/response.dto'
+import { ResponseDto } from '../dto/response.dto'
 
 @Catch()
 export class ResponseErrorFilter implements ExceptionFilter {
@@ -28,6 +28,6 @@ export class ResponseErrorFilter implements ExceptionFilter {
         } else {
             message = 'Internal server error'
         }
-        response.status(status).json(ResponseDTO.error(message, status))
+        response.status(status).json(ResponseDto.error(message, status))
     }
 }

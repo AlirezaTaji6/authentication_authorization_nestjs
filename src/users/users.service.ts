@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserInterface } from './interfaces/create-user.interface';
+import { PhoneInterface } from './interfaces/phone.interface';
 
 @Injectable()
 export class UsersService {
@@ -18,6 +19,10 @@ export class UsersService {
   create(createUserInterface: CreateUserInterface) {
     const userIns = this.usersRepository.create(createUserInterface);
     return this.usersRepository.save(userIns);
+  }
+
+  async findByPhone(phone: string) {
+    return this.usersRepository.findOne({ phone });  
   }
 
   findAll() {
