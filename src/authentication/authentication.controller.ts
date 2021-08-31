@@ -8,6 +8,7 @@ import { UserErrorEnum } from 'src/users/enums/user-message.enum';
 import { UsersService } from 'src/users/users.service';
 import { AuthenticationService } from './authentication.service';
 import { LinearRegisterDto } from './dto/linear-register.dto';
+import { RegisterDto } from './dto/register.dto';
 import { VerifyRegisterDto } from './dto/verify-register.dto';
 import { AuthenticationErrorEnum } from './enums/authentication-message.enum';
 
@@ -57,9 +58,27 @@ export class AuthenticationController {
           )
       
       await this.authenticationService.deleteVerificationCode(phone)
-      
+
       const token = await this.authenticationService.generateForceToken(phone);
 
       return ResponseDto.success({ force_token: token });
+  }
+
+  @ApiOperation({ summary: 'Fill the fields and complete the registration' })
+  @Post('register')
+  async register(@Body() { phone, password, force_token }: RegisterDto) {
+
+    const verified = await this.authenticationService.verifyForceToken(phone, force_token);
+    if(!verified) return ResponseDto.error(
+        AuthenticationErrorEnum.FORCE_TOKEN_INVALID,
+        401
+        )
+
+    await this.authenticationService.deleteForceToken(phone)
+    
+    const userIns = await this.usersService.create({ phone, password })
+
+    return ResponseDto.success(userIns.toJSON());
+
   }
 }

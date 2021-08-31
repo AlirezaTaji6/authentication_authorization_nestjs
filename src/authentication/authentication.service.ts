@@ -79,6 +79,23 @@ export class AuthenticationService {
 
         return token
     }
+
+    async verifyForceToken(phone: string, forceToken: string) {
+        const client = this.redisService.getClient(
+            process.env.REDIS_NAME
+        )
+        
+        const savedToken = await client.get(`activation_token-${phone}`);
+        if(savedToken == forceToken) return true;
+    }
+
+    deleteForceToken(phone: string) {
+        const client = this.redisService.getClient(
+            process.env.REDIS_NAME
+        )
+
+        return client.del(`activation_token-${phone}`)
+    }
 }
 
 
