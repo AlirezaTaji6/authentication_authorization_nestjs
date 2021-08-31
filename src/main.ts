@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { config } from 'dotenv';
-import { ResponseErrorFilter } from "./users/shared/filters/response-error.filter";
+import { ResponseErrorFilter } from "./shared/filters/response-error.filter";
 
 config()
 

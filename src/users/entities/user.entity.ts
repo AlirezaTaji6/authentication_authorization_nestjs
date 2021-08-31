@@ -1,2 +1,7 @@
+import { Entity, Column, PrimaryColumn } from 'typeorm'
 
-export class UserEntity {}
+@Entity('users')
+export class UserEntity {
+    @PrimaryColumn({ })
+    id
+}
